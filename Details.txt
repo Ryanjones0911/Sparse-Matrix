@@ -1,0 +1,61 @@
+A sparse matrix is a matrix where the majority of entries are 0. Matrices are typically
+ implemented using a 2D-array, however a sparse matrix implemented in this fashion will
+ waste a lot of space storing all of the 0s. In this assignment you will create a sparse matrix
+ implementation using circularly-linked lists that have been “interwoven” together. Each
+ node in the sparse matrix will be a member of two circularly-linked lists, one representing
+ its row in the matrix and the other representing its column, as shown in Figure 2.
+ You will be asked to implement a SparseMatrix class whose objects are sparse matrices
+ with integer entries implemented using circularly-linked lists. The internal details are left
+ to you, but you will need to be able to perform the following matrix operations:
+ • Matrix addition C = A+B, where ci,j = ai,j +bi,j.
+ n
+ • Matrix multiplication C = AB, where ci,j =
+ ∑
+ k=1
+ • Matrix transposition B = AT, where bi,j = aj,i.
+ ai,kbk,j.
+ • Scalar multiplication C = bA, where ci,j = b· ai,j.
+ Each of these operations should output a new matrix which you will write to the output
+ f
+ ile.
+ 1
+Figure 2: Image taken from https://cse.iitkgp.ac.in/~dsamanta/javads/handbook_
+ data/05%20Linked%20Lists.htm. The attributes of each node are (clockwise from top
+left): the row index, the column index, the row pointer, the column pointer, and the stored
+ data. The size of the matrix (i.e., number of rows and columns) is stored in the row and
+ column indices of the “header” node.
+ 2
+You have some freedom in how you implement your sparse matrix, so it need not
+ look exactly like the example in Figure 2. For example:
+ • You can remove, or rather not construct in the first place, empty rows and columns
+ such as Row 3 and Column 4 in Figure 2.
+ • You can store header nodes in an array for constant time access (though you must
+ use an array and not a premade data structure).
+ Instructions.
+ 1. Use either Java or C++ to complete the assignment.
+ 2. Do not use any premade data structures, with the exception of standard (non
+expanding) arrays or strings.
+ 3. Your program should accept a single CSV file passed as a command line argument
+ as input, and output a single CSV file. If your language has a built-in CSV reader,
+ feel free to use it (or if you pull code for the CSV reader from online make sure to
+ clearly cite in your comments). For the output file name, use the input file name
+ postpended with output, e.g., if the input file is test1.csv, the output file should
+ be test1
+ output.csv.
+ 4. The input file will be structured in the following way:
+ (a) The first line in the output file will contain a letter indicating the operation to
+ perform, A for addition, M for matrix multiplication, T for transposition, and S
+ for scalar multiplication, followed by a positive integer n to denote the matrices
+ being operated on as n×n matrices.
+ (b) An empty line (only commas).
+ (c) The right matrix, listed as triples with the row index, column index, and the
+ integer data, with each triple on its own line, e.g., a line reading 4, 9, 29
+ means that the matrix has a value of 29 in the 4-th row and 9-th column.
+ (d) An empty line (only commas).
+ (e) The left matrix formatted in the same way as the right, or in the case of scalar
+ multiplication, a single integer.
+ 5. The output file should be structured the same way as the matrices in the input files.
+ Additionally, the entries must be ordered like you are reading the matrix like a book,
+ starting from the left-hand side of row 1 to the right-hand side, then repeating with
+ each subsequent row, e.g, the order of the nodes in Figure 2 would be A, X, M, P, O, L,
+ K, C, B (make sure to include indices as well)
