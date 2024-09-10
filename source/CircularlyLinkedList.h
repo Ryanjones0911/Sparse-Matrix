@@ -16,4 +16,4 @@ public:
     CircularlyLinkedList();
 
     void insert(int data);
-    };
+};
