@@ -1,19 +1,25 @@
-//All implementation details of the circularly linked list data structure will go here
-#include"CircularlyLinkedList.h"
+//this is where we will run the actual program
 
-//A circularly  linked list is just a normal doubly linked list
+#include<iostream>
+
+//All implementation details of the circularly linked list data structure will go here
+
+
+//A circularly linked list is just a normal doubly linked list
 //where the last node points to the head of the list.
 //NOTE** This will not be a feature complete circularly linked list, as I will only be implementing the functionality
-//required to complete the assignment
+//required to complete this assignment
 class Node
 {
     public:
         int data;
         Node* next;
+        Node* cursor;
         Node(int data)
         {
-            data = data;
+            this->data = data;
             next = nullptr;
+            cursor = nullptr;
         }
 };
 
@@ -38,7 +44,23 @@ class CircularlyLinkedList
         if(head == nullptr)
         {
             head = newNode;
+            newNode->next = newNode;
+        }
+        else
+        {
+            Node* current = head;
+
+            while(current->next != head)
+            {
+                current = current->next;
+            }
+            current->next = newNode;
             newNode->next = head;
         }
+    }
+
+    void viewList()
+    {
+        std::cout << "this at least works";
     }
 };
