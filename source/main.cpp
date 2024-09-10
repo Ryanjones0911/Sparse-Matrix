@@ -1,5 +1,3 @@
-//this is where we will run the actual program
-#include<iostream>
 
 //this is where we will run the actual program
 
@@ -75,9 +73,10 @@ class CircularlyLinkedList
         {
             do
             {
-                std::cout << current->data << ", ";
+                std::cout << current->data << " -> ";
                 current = current->next;
             } while (current != head);
+            std::cout << current->data;
             
         }
     }
