@@ -6,6 +6,5 @@
 
 int main()
 {
-    std::cout << "test";
-    Print();
+   Node* first = new Node(5);
 }
