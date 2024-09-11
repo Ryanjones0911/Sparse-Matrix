@@ -1,14 +1,16 @@
 
 #include<iostream>
 
+
 //A circularly linked list is just a normal doubly linked list
 //where the last node points to the head of the list.
 //NOTE** This will not be a feature complete circularly linked list, as I will only be implementing the functionality
 //required to complete this assignment
-
-
 class CircularlyLinkedList
+
 {
+    /*class for the individual nodes of the list. All standard fare expect for cursor, which exists to constantly point to tail of list
+    to allow for constant time access to both sides of this list*/
     class Node
     {
         public:
@@ -23,6 +25,7 @@ class CircularlyLinkedList
             }
     };
     
+    //we dont want people to be able to access these directly and get to messing with our node pointers
     private:
         Node* head;
         Node* cursor;
@@ -40,7 +43,7 @@ class CircularlyLinkedList
         //initialize memory for new node
         Node* newNode = new Node(data);
 
-        //if list is currently empty, add new node as the new head
+        //if list is currently empty, add new node as the new head. Otherwise add it to the end and set cursor to point to new tail
         if(head == nullptr)
         {
             head = newNode;
@@ -62,6 +65,7 @@ class CircularlyLinkedList
         }
     }
 
+    //allows for searching of specific values in the list. This will be useful in our SparseMatrix class
     Node* access(int findData)
     {
         Node* current = head;
@@ -74,7 +78,8 @@ class CircularlyLinkedList
         return current;
     }
 
-
+    //Just a function I've been using to verify proper functionality. I'll try to remember to remove it, but if
+    //it's still here at time of submission just know it's not intended
     void viewList()
     {
         Node* current = head;
