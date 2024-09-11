@@ -1,38 +1,37 @@
 
-//this is where we will run the actual program
-
 #include<iostream>
-
-//All implementation details of the circularly linked list data structure will go here
-
 
 //A circularly linked list is just a normal doubly linked list
 //where the last node points to the head of the list.
 //NOTE** This will not be a feature complete circularly linked list, as I will only be implementing the functionality
 //required to complete this assignment
-class Node
-{
-    public:
-        int data;
-        Node* next;
-        Node* cursor;
-        Node(int data)
-        {
-            this->data = data;
-            next = nullptr;
-            cursor = nullptr;
-        }
-};
+
 
 class CircularlyLinkedList
 {
+    class Node
+    {
+        public:
+            int data;
+            Node* next;
+            Node* cursor;
+            Node(int data)
+            {
+                this->data = data;
+                next = nullptr;
+                cursor = nullptr;
+            }
+    };
+    
     private:
         Node* head;
+        Node* cursor;
 
     public:
         CircularlyLinkedList()
         {
             head = nullptr;
+            cursor = nullptr;
         }
     
     //insert a new node, either at the head or the current last position
@@ -46,6 +45,7 @@ class CircularlyLinkedList
         {
             head = newNode;
             newNode->next = newNode;
+            cursor = newNode;
         }
         else
         {
@@ -57,13 +57,26 @@ class CircularlyLinkedList
             }
             current->next = newNode;
             newNode->next = head;
+            cursor = newNode;
+
         }
     }
 
+    Node* access(int findData)
+    {
+        Node* current = head;
+
+        while(current->data != findData)
+        {
+            current = current->next;
+        }
+
+        return current;
+    }
+
+
     void viewList()
     {
-        //std::cout << "this at least works";
-
         Node* current = head;
         if(current == nullptr)
         {
@@ -76,10 +89,23 @@ class CircularlyLinkedList
                 std::cout << current->data << " -> ";
                 current = current->next;
             } while (current != head);
-            std::cout << current->data;
+            std::cout << " back to head -> " << current->data;
             
         }
     }
+};
+
+class SparseMatrix
+{
+    private:
+        CircularlyLinkedList row;
+        CircularlyLinkedList column;
+
+    public:
+        SparseMatrix(CircularlyLinkedList row)
+        {
+
+        }
 };
 
 int main()
