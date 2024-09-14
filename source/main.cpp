@@ -7,30 +7,30 @@
 //NOTE** This will not be a feature complete circularly linked list, as I will only be implementing the functionality
 //required to complete this assignment
 class CircularlyLinkedList
-
 {
     /*class for the individual nodes of the list. All standard fare expect for cursor, which exists to constantly point to tail of list
     to allow for constant time access to both sides of this list*/
-    class Node
-    {
-        public:
-            int data;
-            Node* next;
-            Node* cursor;
-            Node(int data)
-            {
-                this->data = data;
-                next = nullptr;
-                cursor = nullptr;
-            }
-    };
-    
-    //we dont want people to be able to access these directly and get to messing with our node pointers
-    private:
-        Node* head;
-        Node* cursor;
+
+
 
     public:
+         class Node
+        {
+            public:
+                int data;
+                int col;
+                int row;
+                Node* next;
+                Node* cursor;
+                Node(int col, int row, int data)
+                {
+                    this->data = data;
+                    next = nullptr;
+                    cursor = nullptr;
+                }
+        };
+        Node* head;
+        Node* cursor;
         CircularlyLinkedList()
         {
             head = nullptr;
@@ -38,10 +38,10 @@ class CircularlyLinkedList
         }
     
     //insert a new node, either at the head or the current last position
-    void insert(int data)
+    void insert(int col, int row, int data)
     {
         //initialize memory for new node
-        Node* newNode = new Node(data);
+        Node* newNode = new Node(col, row, data);
 
         //if list is currently empty, add new node as the new head. Otherwise add it to the end and set cursor to point to new tail
         if(head == nullptr)
@@ -66,7 +66,7 @@ class CircularlyLinkedList
     }
 
     //allows for searching of specific values in the list. This will be useful in our SparseMatrix class
-    Node* access(int findData)
+    Node* access(int row, int col, int findData)
     {
         Node* current = head;
 
@@ -80,48 +80,97 @@ class CircularlyLinkedList
 
     //Just a function I've been using to verify proper functionality. I'll try to remember to remove it, but if
     //it's still here at time of submission just know it's not intended
-    void viewList()
+void viewList() const
     {
         Node* current = head;
-        if(current == nullptr)
+        if (current == nullptr)
         {
-            std::cout << "List is empty";
+            std::cout << "List is empty\n";
+            return;
         }
-        else
+
+        do
         {
-            do
-            {
-                std::cout << current->data << " -> ";
-                current = current->next;
-            } while (current != head);
-            std::cout << " back to head -> " << current->data;
-            
-        }
+            std::cout << current->data << " -> ";
+            current = current->next;
+        } while (current != head);
+
+        std::cout << std::endl;
     }
 };
 
 class SparseMatrix
 {
     private:
-        CircularlyLinkedList row;
-        CircularlyLinkedList column;
+        CircularlyLinkedList* row;
+        CircularlyLinkedList* column;
+        int matrixSize;
 
     public:
-        SparseMatrix(CircularlyLinkedList row)
+        SparseMatrix(int matrixSize)
         {
+            row = new CircularlyLinkedList[matrixSize+1];
+            column = new CircularlyLinkedList[matrixSize+1];
+        }
+
+        //this will be rewriten to accomodate CSV functionality, but for now I'm just filling matrices 
+        //manually for testing purposes
+        void addData(int rowIndex, int colIndex, int data)
+        {
+            row[rowIndex].insert(rowIndex, colIndex, data);
+            column[colIndex].insert(rowIndex, colIndex, data);
 
         }
+
+
+    void viewMatrix() 
+    {
+        std::cout << "Matrix view:" << std::endl;
+
+        for (int i = 0; i < matrixSize; i++)
+        {
+            std::cout << "Row " << i << ": ";
+            row[i].viewList();
+        }
+
+        std::cout << std::endl;
+
+        for (int i = 0; i < matrixSize; i++)
+        {
+            std::cout << "Column " << i << ": ";
+            column[i].viewList();
+        }
+    }
+
+    //SparseMatrix* scalarMultiply(int scalar)
+    //{
+        //all we do is multiply every element of the matrix by the scalar value
+        //and return the resultant matrix
+
+        
+    //}
 };
 
 int main()
 {
     CircularlyLinkedList test;
+    SparseMatrix matrixTest(4);
+    
 
-    test.insert(5);
-    test.insert(6);
-    test.insert(7);
-    test.insert(8);
-    test.insert(9);
-    test.insert(10);
-    test.viewList();
+  
+
+    matrixTest.addData(1,3,11);
+    matrixTest.addData(4,2,1);
+    matrixTest.addData(3,2,8);
+    matrixTest.addData(1,1,7);
+    matrixTest.addData(1,2,-4);
+
+
+    matrixTest.viewMatrix();
+    
+
+
+    //SparseMatrix* resultant = matrixTest.scalarMultiply(2);
+
+   
 }
