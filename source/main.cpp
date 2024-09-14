@@ -117,8 +117,8 @@ class SparseMatrix
         //manually for testing purposes
         void addData(int rowIndex, int colIndex, int data)
         {
-            row[rowIndex].insert(rowIndex, colIndex, data);
-            column[colIndex].insert(rowIndex, colIndex, data);
+            row[rowIndex-1].insert(rowIndex, colIndex, data);
+            column[colIndex-1].insert(rowIndex, colIndex, data);
 
         }
 
