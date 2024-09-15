@@ -25,8 +25,10 @@ class CircularlyLinkedList
                 Node(int col, int row, int data)
                 {
                     this->data = data;
-                    next = nullptr;
-                    cursor = nullptr;
+                    this->next = nullptr;
+                    this-> col = col;
+                    this-> row = row;
+                    this->cursor = nullptr;
                 }
         };
         Node* head;
@@ -109,6 +111,7 @@ class SparseMatrix
     public:
         SparseMatrix(int matrixSize)
         {
+            this->matrixSize = matrixSize;
             row = new CircularlyLinkedList[matrixSize];
             column = new CircularlyLinkedList[matrixSize];
         }
@@ -117,8 +120,8 @@ class SparseMatrix
         //manually for testing purposes
         void addData(int rowIndex, int colIndex, int data)
         {
-            row[rowIndex].insert(rowIndex, colIndex, data);
-            column[colIndex].insert(rowIndex, colIndex, data);
+            row[rowIndex].insert(colIndex, rowIndex, data);
+            column[colIndex].insert(colIndex, rowIndex, data);
 
         }
 
@@ -171,7 +174,6 @@ class SparseMatrix
 
             
             resultant.addData(3,4,5);
-            resultant.viewMatrix();
             return resultant;
         }
 
@@ -193,8 +195,9 @@ int main()
     matrixTest.addData(3,2,8);
     matrixTest.addData(1,3,7);
     matrixTest.addData(1,2,-4);
+    matrixTest.viewMatrix();
+    std::cout << "Element at 3,2 is " << matrixTest.getElement(3,2);
 
-
-    SparseMatrix resultant = matrixTest.scalarMultiply(2);
+    //SparseMatrix resultant = matrixTest.scalarMultiply(2);
  
 }
