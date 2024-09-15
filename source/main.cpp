@@ -76,7 +76,7 @@ class CircularlyLinkedList
         }
 
         return current;
-    }
+    }    
 
     //Just a function I've been using to verify proper functionality. I'll try to remember to remove it, but if
     //it's still here at time of submission just know it's not intended
@@ -109,68 +109,92 @@ class SparseMatrix
     public:
         SparseMatrix(int matrixSize)
         {
-            row = new CircularlyLinkedList[matrixSize+1];
-            column = new CircularlyLinkedList[matrixSize+1];
+            row = new CircularlyLinkedList[matrixSize];
+            column = new CircularlyLinkedList[matrixSize];
         }
 
         //this will be rewriten to accomodate CSV functionality, but for now I'm just filling matrices 
         //manually for testing purposes
         void addData(int rowIndex, int colIndex, int data)
         {
-            row[rowIndex-1].insert(rowIndex, colIndex, data);
-            column[colIndex-1].insert(rowIndex, colIndex, data);
+            row[rowIndex].insert(rowIndex, colIndex, data);
+            column[colIndex].insert(rowIndex, colIndex, data);
 
         }
 
 
-    void viewMatrix() 
-    {
-        std::cout << "Matrix view:" << std::endl;
-
-        for (int i = 0; i < matrixSize; i++)
+        void viewMatrix() 
         {
-            std::cout << "Row " << i << ": ";
-            row[i].viewList();
+    
+
+            for (int i = 0; i < matrixSize; i++)
+            {
+                std::cout << "Row " << i << ": ";
+                row[i].viewList();
+            }
+
+            std::cout << std::endl;
+
+
+
         }
 
-        std::cout << std::endl;
+        int getElement(int rowIndex, int colIndex)
+            {
+                if (rowIndex >= matrixSize || colIndex >= matrixSize || rowIndex < 0 || colIndex < 0)
+                {
+                    std::cerr << "Index out of bounds" << std::endl;
+                    return 0; // or any other error indicator
+                }
 
-        for (int i = 0; i < matrixSize; i++)
+                CircularlyLinkedList::Node* current = row[rowIndex].head;
+                if (current != nullptr)
+                {
+                    do
+                    {
+                        if (current->col == colIndex)
+                        {
+                            return current->data;
+                        }
+                        current = current->next;
+                    } while (current != row[rowIndex].head);
+                }
+
+                return 0; // default value if not found, meaning the element is not in the list
+            }
+
+        SparseMatrix scalarMultiply(int scalar)
         {
-            std::cout << "Column " << i << ": ";
-            column[i].viewList();
+            //all we do is multiply every element of the matrix by the scalar value
+            //and return the resultant matrix
+            SparseMatrix resultant(matrixSize);
+
+            
+            resultant.addData(3,4,5);
+            resultant.viewMatrix();
+            return resultant;
         }
-    }
 
-    //SparseMatrix* scalarMultiply(int scalar)
-    //{
-        //all we do is multiply every element of the matrix by the scalar value
-        //and return the resultant matrix
-
-        
-    //}
+        ~SparseMatrix()
+        {
+            delete[]row;
+            delete[]column;
+        }
 };
 
 int main()
 {
-    CircularlyLinkedList test;
-    SparseMatrix matrixTest(4);
+    SparseMatrix matrixTest(5);
     
-
   
 
     matrixTest.addData(1,3,11);
     matrixTest.addData(4,2,1);
     matrixTest.addData(3,2,8);
-    matrixTest.addData(1,1,7);
+    matrixTest.addData(1,3,7);
     matrixTest.addData(1,2,-4);
 
 
-    matrixTest.viewMatrix();
-    
-
-
-    //SparseMatrix* resultant = matrixTest.scalarMultiply(2);
-
-   
+    SparseMatrix resultant = matrixTest.scalarMultiply(2);
+ 
 }
