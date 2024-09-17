@@ -144,11 +144,6 @@ class SparseMatrix
 
         int getElement(int rowIndex, int colIndex)
             {
-                if (rowIndex >= matrixSize || colIndex >= matrixSize || rowIndex < 0 || colIndex < 0)
-                {
-                    std::cerr << "Index out of bounds" << std::endl;
-                    return 0; // or any other error indicator
-                }
 
                 CircularlyLinkedList::Node* current = row[rowIndex].head;
                 if (current != nullptr)
@@ -166,21 +161,36 @@ class SparseMatrix
                 return 0; // default value if not found, meaning the element is not in the list
             }
 
-        SparseMatrix scalarMultiply(int scalar)
+        SparseMatrix scalarMultiply(SparseMatrix matrix, int scalar)
         {
-            //all we do is multiply every element of the matrix by the scalar value
-            //and return the resultant matrix
             SparseMatrix resultant(matrixSize);
-
-            
-            resultant.addData(3,4,5);
+            for (int i = 0; i < matrixSize; i++)
+            {
+                CircularlyLinkedList::Node* current = matrix.row[i].head;
+                if(current != nullptr)
+                {
+                    do
+                    {
+                        resultant.addData(current->row, current->col, (current->data * 2));
+                        current = current->next;
+                    } while (current != matrix.row[i].head);
+                    
+                }
+            }
             return resultant;
         }
 
-        ~SparseMatrix()
+        SparseMatrix transposeMatrix(SparseMatrix matrix)
         {
-            delete[]row;
-            delete[]column;
+            //to transpose a square matrix all we need to do
+            //is swap the rows and columns
+
+            SparseMatrix resultant(matrixSize);
+
+
+
+
+            return resultant;
         }
 };
 
@@ -196,8 +206,9 @@ int main()
     matrixTest.addData(1,3,7);
     matrixTest.addData(1,2,-4);
     matrixTest.viewMatrix();
-    std::cout << "Element at 3,2 is " << matrixTest.getElement(3,2);
+    std::cout << "Element at 3,2 is " << matrixTest.getElement(3,2) << std::endl;
 
-    //SparseMatrix resultant = matrixTest.scalarMultiply(2);
+    SparseMatrix resultant = matrixTest.scalarMultiply(matrixTest, 2);
+    resultant.viewMatrix();
  
 }
