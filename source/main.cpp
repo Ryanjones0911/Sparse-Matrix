@@ -187,9 +187,19 @@ class SparseMatrix
 
             SparseMatrix resultant(matrixSize);
 
-
-
-
+            for (int i = 0; i < matrixSize; i++)
+            {
+            CircularlyLinkedList::Node* current = matrix.row[i].head;
+                if(current != nullptr)
+                {
+                    do  
+                    {  
+                        resultant.addData(current->col, current->row, current->data);
+                        current = current->next;
+                    } while (current != matrix.row[i].head);
+                    
+                }
+            }
             return resultant;
         }
 };
@@ -203,12 +213,18 @@ int main()
     matrixTest.addData(1,3,11);
     matrixTest.addData(4,2,1);
     matrixTest.addData(3,2,8);
-    matrixTest.addData(1,3,7);
+    matrixTest.addData(1,1,7);
     matrixTest.addData(1,2,-4);
     matrixTest.viewMatrix();
-    std::cout << "Element at 3,2 is " << matrixTest.getElement(3,2) << std::endl;
+    std::cout << "Element at 1,3 is " << matrixTest.getElement(1,3) << std::endl;
 
+    std::cout << "Scalar multiply by 2: \n";
     SparseMatrix resultant = matrixTest.scalarMultiply(matrixTest, 2);
     resultant.viewMatrix();
+
+    std::cout << "Transposed: \n";
+    SparseMatrix transposed = matrixTest.transposeMatrix(matrixTest);
+    transposed.viewMatrix();
+    std::cout << "Element at 3,1 is " << transposed.getElement(3,1);
  
 }
