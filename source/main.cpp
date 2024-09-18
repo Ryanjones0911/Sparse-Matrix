@@ -206,7 +206,7 @@ class SparseMatrix {
         return resultant;
     }
 
-SparseMatrix multiplyMatrix(SparseMatrix a, SparseMatrix b) {
+    SparseMatrix multiplyMatrix(SparseMatrix a, SparseMatrix b) {
     SparseMatrix resultant(matrixSize);
     //NOTE: I don't like this being 3 nested for loops, but I'm out of time to find a better solution and this does function
 
@@ -243,9 +243,21 @@ int main() {
     int col;
     int data;
     int location;
+    int scalar;
     std::string operationS;
 
-    myFile.open("test1a.csv");
+
+    do
+    {
+        std::cout << "Enter filename: ";
+        std::cin >> filename;
+        if(!myFile.is_open())
+        {
+            std::cerr << "File not Found";
+        }
+    } while (!myFile.is_open());
+    
+    //myFile.open("test1_s.csv");
 
     //this will be true for all types of operations, gets operator and matrix size
     getline(myFile, line);
@@ -273,17 +285,14 @@ int main() {
             location = line.find(',');
             row = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << row;
 
             location = line.find(',');
             col = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << col;
 
             location = line.find(',');
             data = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << data << "\n";
 
             a.addData(row,col,data);
         }
@@ -295,17 +304,14 @@ int main() {
             location = line.find(',');
             row = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << row;
 
             location = line.find(',');
             col = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << col;
 
             location = line.find(',');
             data = stoi(line.substr(0, location));
             line = line.substr(location+1, line.length());
-            std::cout << data << "\n";
 
             b.addData(row,col,data);
         }
@@ -313,10 +319,75 @@ int main() {
         a.viewMatrix();
         b.viewMatrix();
 
-        SparseMatrix result = a.addMatrix(a,b);
+        if(operation == 'A')
+        {
+            SparseMatrix result = a.addMatrix(a,b);
+            result.viewMatrix();
 
-        result.viewMatrix();
+        }
+        else
+        {
+            SparseMatrix result = a.multiplyMatrix(a,b);
+            result.viewMatrix();
+
+        }
 
 
     }
+
+    if(operation == 'T')
+    {
+        SparseMatrix a(matrixSize+1);
+
+        while(getline(myFile, line) && line[0] != ',')
+        {
+
+            location = line.find(',');
+            row = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            location = line.find(',');
+            col = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            location = line.find(',');
+            data = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            a.addData(row,col,data);
+        }
+
+        SparseMatrix result = a.transposeMatrix(a);
+        result.viewMatrix();
+
+    }
+
+    if(operation == 'S')
+    {
+        SparseMatrix a(matrixSize+1);
+        while(getline(myFile, line) && line[0] != ',')
+        {
+
+            location = line.find(',');
+            row = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            location = line.find(',');
+            col = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            location = line.find(',');
+            data = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+
+            a.addData(row,col,data);
+        }
+        a.viewMatrix();
+        getline(myFile, line);
+        scalar = stoi(line.substr(0,1));
+
+        SparseMatrix result = a.scalarMultiply(a, scalar);
+        result.viewMatrix();
+    }
 }
+
