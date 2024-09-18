@@ -247,10 +247,11 @@ int main() {
     std::string operationS;
 
 
-    do
+   do
     {
         std::cout << "Enter filename: ";
         std::cin >> filename;
+        myFile.open(filename);
         if(!myFile.is_open())
         {
             std::cerr << "File not Found";
@@ -389,5 +390,7 @@ int main() {
         SparseMatrix result = a.scalarMultiply(a, scalar);
         result.viewMatrix();
     }
+
+
 }
 
