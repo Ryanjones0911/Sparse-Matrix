@@ -1,7 +1,8 @@
 #include<iostream>
 #include<fstream>
 #include<sstream>
-
+#include<stdexcept>
+#include<string>
 
 //A circularly linked list is just a normal doubly linked list
 //where the last node points to the head of the list.
@@ -229,113 +230,93 @@ SparseMatrix multiplyMatrix(SparseMatrix a, SparseMatrix b) {
     
     return resultant;
     }
-
-
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <stdexcept>
-
-static void readFromCSV(const std::string& filename, char& operation, int& matrixSize, SparseMatrix& matrix1, SparseMatrix& matrix2, int& scalar) {
-    std::ifstream fin(filename);
-    if (!fin.is_open()) {
-        std::cerr << "Error opening file " << filename << std::endl;
-        return;
-    }
-
-    std::string line;
-
-    // Read the first line that contains both operation and matrix size
-    if (std::getline(fin, line)) {
-        std::istringstream iss(line);
-
-        // Parse operation and matrix size
-        if (!(iss >> operation >> matrixSize)) {
-            std::cerr << "Error parsing operation or matrix size from the line: " << line << std::endl;
-            return;
-        }
-        std::cout << "Operation: " << operation << "\nMatrix Size: " << matrixSize << std::endl;
-    } else {
-        std::cerr << "Failed to read operation and matrix size from CSV." << std::endl;
-        return;
-    }
-
-    // Initialize the matrices with the matrix size
-    matrix1 = SparseMatrix(matrixSize);
-    matrix2 = SparseMatrix(matrixSize);
-
-    // Read the matrix data
-    while (std::getline(fin, line)) {
-        std::istringstream ss(line);
-        int row, col, data;
-
-        if (!(ss >> row >> col >> data)) {
-            std::cerr << "Error parsing matrix data: " << line << std::endl;
-            continue;  // Skip this line if it's malformed
-        }
-
-        matrix1.addData(row, col, data);  // You might need to adjust this if it's the second matrix
-    }
-
-    fin.close();
-}
-
-static void writeToCSV(const std::string& filename, SparseMatrix& result, char operation, int matrixSize) {
-    std::ofstream fout(filename);
-    if (!fout.is_open()) {
-        std::cerr << "Error opening file " << filename << std::endl;
-        return;
-    }
-    
-    fout << operation << "\n";
-    fout << matrixSize << "\n";
-    
-    // Output the data in (row, col, data) format
-    for (int i = 0; i < matrixSize; i++) {
-        CircularlyLinkedList::Node* current = result.row[i].head;
-        if (current != nullptr) {
-            do {
-                fout << current->row << "," << current->col << "," << current->data << "\n";
-                current = current->next;
-            } while (current != result.row[i].head);
-        }
-    }
-    
-    fout.close();
-}
-
 };
 
+//I would have very much liked for the CSV functionality to be more sophisticated, cleaner, and honestly a part of
+//their own class, but I've run out of time. The code below is far from elegant, but it does work
 int main() {
-    std::string inputFilename, outputFilename;
-    std::cout << "Enter input CSV filename: ";
-    std::cin >> inputFilename;
-
-    char operation;
+    std::ifstream myFile;
+    std::string filename;
+    std::string line = "";
     int matrixSize;
-    int scalar = 0;  // Scalar for scalar multiplication
-    SparseMatrix matrix1(0), matrix2(0);
+    int row;
+    int col;
+    int data;
+    int location;
+    std::string operationS;
 
-    // Read data from the CSV file
-    SparseMatrix::readFromCSV(inputFilename, operation, matrixSize, matrix1, matrix2, scalar);
+    myFile.open("test1a.csv");
 
-    SparseMatrix result(matrixSize);
+    //this will be true for all types of operations, gets operator and matrix size
+    getline(myFile, line);
+    location = line.find(',');
+    operationS = line.substr(0, location);
+   
+    matrixSize = stoi(line.substr(location+1, line.find(',')));
+   
+    
 
-    // Perform the appropriate operation
-    if (operation == 'A') {
-        result = matrix1.addMatrix(matrix1, matrix2);
-    } else if (operation == 'M') {
-        result = matrix1.multiplyMatrix(matrix1, matrix2);
-    } else if (operation == 'T') {
-        result = matrix1.transposeMatrix(matrix1);  // Transpose the left matrix
-    } else if (operation == 'S') {
-        result = matrix1.scalarMultiply(matrix1, scalar);  // Scalar multiplication
+    char operation = operationS[0];
+
+    //just commas
+    getline(myFile, line);
+
+
+    if(operation == 'A' || operation == 'M')
+    {
+        SparseMatrix a(matrixSize+1);
+        SparseMatrix b(matrixSize+1);
+
+        while(getline(myFile, line) && line[0] != ',')
+        {
+
+            location = line.find(',');
+            row = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << row;
+
+            location = line.find(',');
+            col = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << col;
+
+            location = line.find(',');
+            data = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << data << "\n";
+
+            a.addData(row,col,data);
+        }
+
+        
+
+        while(getline(myFile, line) && line[0] != ',' && !line.empty())
+        {
+            location = line.find(',');
+            row = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << row;
+
+            location = line.find(',');
+            col = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << col;
+
+            location = line.find(',');
+            data = stoi(line.substr(0, location));
+            line = line.substr(location+1, line.length());
+            std::cout << data << "\n";
+
+            b.addData(row,col,data);
+        }
+
+        a.viewMatrix();
+        b.viewMatrix();
+
+        SparseMatrix result = a.addMatrix(a,b);
+
+        result.viewMatrix();
+
+
     }
-
-    // Output the result to a CSV file
-    std::cout << "Enter output CSV filename: ";
-    std::cin >> outputFilename;
-    SparseMatrix::writeToCSV(outputFilename, result, operation, matrixSize);
-
-    return 0;
 }
